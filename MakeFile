@@ -1,32 +1,35 @@
 # Compiler
 CXX = g++
+CXXFLAGS = -std=c++11 -Wall
 
-# Compiler flags
-CXXFLAGS = -Wall -std=c++11
+# Target Executable
+TARGET = state_program
 
-# Target executable
-TARGET = stateHash
+# Source Files
+SOURCES = main.cpp stateData.cpp hashT.cpp
 
-# Source files
-SRC = main.cpp
+# Object Files
+OBJECTS = main.o stateData.o hashT.o
 
-# Object files (generated from the source files)
-OBJ = $(SRC:.cpp=.o)
-
-# Default rule to build the target executable
+# Default target
 all: $(TARGET)
 
-# Rule to build the target executable from object files
-$(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJ)
+# Link the object files to create the executable
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
 
-# Rule to build the object files from the source files
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Compile main.cpp
+main.o: main.cpp stateData.h hashT.h
+	$(CXX) $(CXXFLAGS) -c main.cpp
 
-# Clean up the build files
+# Compile stateData.cpp
+stateData.o: stateData.cpp stateData.h
+	$(CXX) $(CXXFLAGS) -c stateData.cpp
+
+# Compile hashT.cpp
+hashT.o: hashT.cpp hashT.h stateData.h
+	$(CXX) $(CXXFLAGS) -c hashT.cpp
+
+# Clean up
 clean:
-	rm -f $(OBJ) $(TARGET)
-
-# Rebuild the project from scratch
-rebuild: clean all
+	rm -f *.o $(TARGET)
